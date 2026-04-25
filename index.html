@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Currículo Pro • Criador Grátis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #f1f5f9; }
+        .glass { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); }
+        .card { background: #fff; border-radius: 22px; box-shadow: 0 8px 30px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02); transition: box-shadow 0.2s; }
+        .card:hover { box-shadow: 0 12px 36px rgba(0,0,0,0.06); }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 14px rgba(99,102,241,0.35); transition: all 0.25s; border: none; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(99,102,241,0.45); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(16,185,129,0.35); transition: all 0.25s; border: none; }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(16,185,129,0.45); }
+        .template-btn { transition: all 0.2s; border: 2px solid #e2e8f0; background: #fff; border-radius: 16px; padding: 0.7rem 1.2rem; font-weight: 500; }
+        .template-btn.active { border-color: #6366f1; background: #eef2ff; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .input-modern { border: 2px solid #e9eef2; border-radius: 14px; padding: 10px 14px; transition: all 0.2s; background: #f8fafc; }
+        .input-modern:focus { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,0.06); outline: none; background: #fff; }
+        textarea.input-modern { resize: vertical; min-height: 70px; }
+        .skill-tag { background: #eef2ff; color: #4338ca; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+        .skill-tag button { background: none; border: none; color: #6366f1; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; margin-left: 2px; }
+        #resume-preview { font-size: 0.9rem; line-height: 1.5; }
+        @media print { body * { visibility: hidden; } #resume-preview, #resume-preview * { visibility: visible; } #resume-preview { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0.5in; box-shadow: none; } #donation-banner, .no-print-section { display: none !important; } }
+        #donation-banner { transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); background: #fff7ed; border-top: 2px solid #fdba74; }
+        #donation-banner.hidden-banner { transform: translateY(120%); }
+        .pix-copy { cursor: pointer; user-select: all; transition: 0.2s; }
+        .pix-copy:active { transform: scale(0.97); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Banner doação -->
+    <div id="donation-banner" class="fixed bottom-0 left-0 right-0 z-50 p-3 md:p-4 flex items-center justify-between gap-3 flex-wrap shadow-2xl">
+        <div class="flex items-center gap-3">
+            <div class="bg-white p-1.5 rounded-2xl shadow">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=876cd9e5-e311-490a-9aab-8d2bd08fe48d" alt="QR Pix" class="w-14 h-14 rounded-xl" onerror="this.style.display='none'">
+            </div>
+            <div>
+                <p class="font-semibold text-gray-800 text-sm md:text-base">💛 Currículo grátis · Apoie via Pix</p>
+                <p id="pix-key" class="pix-copy font-mono text-indigo-700 bg-white/90 px-3 py-1.5 rounded-xl border border-indigo-200 mt-1 inline-block text-xs md:text-sm font-medium shadow-sm" title="Clique para copiar">
+                    🔑 876cd9e5-e311-490a-9aab-8d2bd08fe48d
+                </p>
+                <span id="copy-feedback" class="text-xs text-green-600 ml-2 font-semibold hidden">✅ Copiado!</span>
+            </div>
+        </div>
+        <button id="close-banner" class="bg-orange-200 hover:bg-orange-300 text-gray-700 rounded-full px-3 py-1.5 font-bold shadow text-sm transition">✕</button>
+    </div>
+
+    <!-- Header -->
+    <header class="py-5 px-4 md:px-8 no-print-section bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/20 p-2.5 rounded-2xl text-2xl">📄</div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-white">Currículo <span class="text-amber-300">Pro</span></h1>
+                    <p class="text-indigo-200 text-xs md:text-sm">Ferramenta profissional gratuita</p>
+                </div>
+            </div>
+            <span class="hidden md:inline text-indigo-200 text-sm font-medium">✨ 100% grátis</span>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6 md:py-8 pb-28 md:pb-10 no-print-section">
+        <!-- Seleção de template -->
+        <div class="mb-6">
+            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Modelo de currículo</h2>
+            <div class="flex flex-wrap gap-3" id="template-selector">
+                <button data-template="classic" class="template-btn active flex items-center gap-2">📝 Clássico</button>
+                <button data-template="modern" class="template-btn flex items-center gap-2">✨ Moderno</button>
+                <button data-template="minimal" class="template-btn flex items-center gap-2">🤍 Minimalista</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Formulário -->
+            <div class="card p-6 space-y-5">
+                <h2 class="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">📋 Seus dados</h2>
+
+                <div class="space-y-3">
+                    <input type="text" id="nome" placeholder="Nome completo *" class="input-modern w-full">
+                    <input type="text" id="cargo" placeholder="Cargo desejado *" class="input-modern w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="email" id="email" placeholder="E-mail" class="input-modern w-full">
+                        <input type="tel" id="telefone" placeholder="Telefone" class="input-modern w-full">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="endereco" placeholder="Cidade, Estado" class="input-modern w-full">
+                        <input type="text" id="linkedin" placeholder="LinkedIn (URL)" class="input-modern w-full">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="portfolio" placeholder="Portfólio / Site" class="input-modern w-full">
+                        <input type="text" id="github" placeholder="GitHub (URL)" class="input-modern w-full">
+                    </div>
+                    <textarea id="resumo" rows="3" placeholder="Resumo profissional – destaque seus objetivos e principais competências" class="input-modern w-full"></textarea>
+                </div>
+
+                <!-- Experiências -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-semibold text-gray-700">💼 Experiência</h3>
+                        <button id="add-experiencia" class="text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-xl text-sm font-semibold transition">+ Adicionar</button>
+                    </div>
+                    <div id="experiencias-container" class="space-y-3"></div>
+                </div>
+
+                <!-- Educação -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-semibold text-gray-700">🎓 Formação</h3>
+                        <button id="add-educacao" class="text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded-xl text-sm font-semibold transition">+ Adicionar</button>
+                    </div>
+                    <div id="educacao-container" class="space-y-3"></div>
+                </div>
+
+                <!-- Habilidades (tags dinâmicas) -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-semibold text-gray-700">⚡ Habilidades</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-2" id="skills-tags"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="nova-habilidade" placeholder="Ex: React, Gestão de projetos..." class="input-modern flex-1 py-2 text-sm">
+                        <button id="add-habilidade" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 rounded-xl text-sm font-medium transition">Adicionar</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Adicione uma de cada vez ou separe por vírgula</p>
+                </div>
+
+                <!-- Idiomas -->
+                <div>
+                    <label class="text-sm font-semibold text-gray-700">🌐 Idiomas</label>
+                    <textarea id="idiomas" rows="2" placeholder="Inglês - Avançado, Espanhol - Básico" class="input-modern w-full mt-1"></textarea>
+                </div>
+
+                <!-- Certificações -->
+                <div>
+                    <label class="text-sm font-semibold text-gray-700">📜 Certificações</label>
+                    <textarea id="certificacoes" rows="2" placeholder="AWS Certified, Scrum Master..." class="input-modern w-full mt-1"></textarea>
+                </div>
+
+                <div class="flex flex-wrap gap-3 pt-2 justify-end">
+                    <button id="download-btn" class="btn-primary text-white font-semibold py-2.5 px-5 rounded-2xl flex items-center gap-2">📥 Baixar PDF</button>
+                    <button id="print-btn" class="btn-success text-white font-semibold py-2.5 px-5 rounded-2xl flex items-center gap-2">🖨️ Imprimir</button>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="card p-6 lg:sticky lg:top-6 h-fit">
+                <h2 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">👁️ Pré-visualização</h2>
+                <div id="resume-preview" class="bg-white border border-gray-100 rounded-2xl p-5 min-h-[700px] shadow-inner text-gray-800">
+                    <div class="text-center text-gray-300 mt-28">Preencha os campos para visualizar</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Templates ocultos -->
+    <template id="experiencia-template">
+        <div class="experiencia-item bg-gray-50 p-3 rounded-2xl border border-gray-100 relative">
+            <button type="button" class="remove-item absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl leading-none w-6 h-6 rounded-full hover:bg-red-50 flex items-center justify-center transition">&times;</button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input type="text" class="cargo-exp input-modern text-sm py-2" placeholder="Cargo">
+                <input type="text" class="empresa-exp input-modern text-sm py-2" placeholder="Empresa">
+                <input type="text" class="periodo-exp input-modern text-sm py-2" placeholder="Período">
+            </div>
+            <textarea class="descricao-exp input-modern text-sm mt-2 w-full" rows="2" placeholder="Descrição"></textarea>
+        </div>
+    </template>
+    <template id="educacao-template">
+        <div class="educacao-item bg-gray-50 p-3 rounded-2xl border border-gray-100 relative">
+            <button type="button" class="remove-item absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl leading-none w-6 h-6 rounded-full hover:bg-red-50 flex items-center justify-center transition">&times;</button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input type="text" class="curso-edu input-modern text-sm py-2" placeholder="Curso">
+                <input type="text" class="instituicao-edu input-modern text-sm py-2" placeholder="Instituição">
+                <input type="text" class="ano-edu input-modern text-sm py-2" placeholder="Ano">
+            </div>
+        </div>
+    </template>
+
+    <script>
+        (function() {
+            const preview = document.getElementById('resume-preview');
+            const CHAVE_PIX = '876cd9e5-e311-490a-9aab-8d2bd08fe48d';
+            let currentTemplate = 'classic';
+
+            // Elementos do formulário
+            const nomeInput = document.getElementById('nome');
+            const cargoInput = document.getElementById('cargo');
+            const emailInput = document.getElementById('email');
+            const telefoneInput = document.getElementById('telefone');
+            const enderecoInput = document.getElementById('endereco');
+            const linkedinInput = document.getElementById('linkedin');
+            const portfolioInput = document.getElementById('portfolio');
+            const githubInput = document.getElementById('github');
+            const resumoInput = document.getElementById('resumo');
+            const idiomasInput = document.getElementById('idiomas');
+            const certificacoesInput = document.getElementById('certificacoes');
+            const experienciasContainer = document.getElementById('experiencias-container');
+            const educacaoContainer = document.getElementById('educacao-container');
+            const skillsTags = document.getElementById('skills-tags');
+            const novaHabilidadeInput = document.getElementById('nova-habilidade');
+            const addHabilidadeBtn = document.getElementById('add-habilidade');
+
+            // Banner
+            const banner = document.getElementById('donation-banner');
+            document.getElementById('close-banner').addEventListener('click', () => {
+                banner.classList.add('hidden-banner');
+                localStorage.setItem('bannerClosed', 'true');
+            });
+            if (localStorage.getItem('bannerClosed') === 'true') banner.classList.add('hidden-banner');
+
+            // Copiar Pix
+            document.getElementById('pix-key').addEventListener('click', async () => {
+                const fb = document.getElementById('copy-feedback');
+                try { await navigator.clipboard.writeText(CHAVE_PIX); } catch {
+                    const tmp = document.createElement('input'); tmp.value = CHAVE_PIX;
+                    document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp);
+                }
+                fb.classList.remove('hidden'); setTimeout(() => fb.classList.add('hidden'), 2200);
+            });
+
+            // Seleção de template
+            document.querySelectorAll('.template-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTemplate = btn.dataset.template;
+                    updatePreview();
+                });
+            });
+
+            // Habilidades dinâmicas
+            function renderSkillTags() {
+                skillsTags.innerHTML = '';
+                getSkillsArray().forEach(skill => {
+                    const tag = document.createElement('span');
+                    tag.className = 'skill-tag';
+                    tag.innerHTML = `${skill} <button class="remove-skill" data-skill="${skill}">×</button>`;
+                    skillsTags.appendChild(tag);
+                });
+                document.querySelectorAll('.remove-skill').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const skillToRemove = e.target.dataset.skill;
+                        const current = getSkillsArray().filter(s => s !== skillToRemove);
+                        novaHabilidadeInput.value = current.join(', ');
+                        updateSkillsFromInput();
+                        updatePreview();
+                    });
+                });
+            }
+
+            function getSkillsArray() {
+                return novaHabilidadeInput.value.split(',').map(s => s.trim()).filter(s => s);
+            }
+
+            function updateSkillsFromInput() {
+                const arr = getSkillsArray();
+                novaHabilidadeInput.value = arr.join(', ');
+                renderSkillTags();
+            }
+
+            addHabilidadeBtn.addEventListener('click', () => {
+                const newSkill = novaHabilidadeInput.value.trim().replace(/,/g, '');
+                if (newSkill) {
+                    const current = getSkillsArray();
+                    current.push(newSkill);
+                    novaHabilidadeInput.value = current.join(', ');
+                    updateSkillsFromInput();
+                    updatePreview();
+                }
+            });
+
+            novaHabilidadeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addHabilidadeBtn.click();
+                }
+            });
+
+            novaHabilidadeInput.addEventListener('input', () => {
+                // Permite edição manual por vírgulas também
+                if (novaHabilidadeInput.value.includes(',')) {
+                    updateSkillsFromInput();
+                    updatePreview();
+                }
+            });
+
+            // Função auxiliar
+            function getVal(sel, parent = document) {
+                const el = parent.querySelector(sel);
+                return el ? el.value.trim() : '';
+            }
+
+            // Modelos de currículo
+            function buildClassicTemplate(d) {
+                return `
+                <div style="font-family: 'Inter', sans-serif; color:#1e293b;">
+                    <div style="text-align:center; margin-bottom:1.5rem; border-bottom:3px solid #6366f1; padding-bottom:1rem;">
+                        <h2 style="font-size:28px; font-weight:800; margin:0; color:#1e1b4b;">${d.nome}</h2>
+                        <p style="font-size:16px; color:#6366f1; font-weight:600; margin:4px 0;">${d.cargo}</p>
+                        <p style="font-size:11px; color:#64748b; display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
+                            ${d.email ? '<span>📧 '+d.email+'</span>' : ''}
+                            ${d.telefone ? '<span>📱 '+d.telefone+'</span>' : ''}
+                            ${d.endereco ? '<span>📍 '+d.endereco+'</span>' : ''}
+                            ${d.linkedin ? '<span>🔗 '+d.linkedin+'</span>' : ''}
+                            ${d.portfolio ? '<span>🌐 '+d.portfolio+'</span>' : ''}
+                            ${d.github ? '<span>🐙 '+d.github+'</span>' : ''}
+                        </p>
+                    </div>
+                    ${d.resumo ? '<p style="font-style:italic; color:#475569; margin-bottom:1rem;">'+d.resumo+'</p>' : ''}
+                    ${d.experienciasHTML ? '<div style="margin-bottom:1rem;"><h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#6366f1; border-bottom:2px solid #e2e8f0; padding-bottom:4px;">Experiência</h3>'+d.experienciasHTML+'</div>' : ''}
+                    ${d.educacaoHTML ? '<div style="margin-bottom:1rem;"><h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#6366f1; border-bottom:2px solid #e2e8f0; padding-bottom:4px;">Formação</h3>'+d.educacaoHTML+'</div>' : ''}
+                    ${d.habilidades ? '<div style="margin-bottom:1rem;"><h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#6366f1; border-bottom:2px solid #e2e8f0; padding-bottom:4px;">Habilidades</h3><p style="font-size:13px;">'+d.habilidades+'</p></div>' : ''}
+                    ${d.idiomas ? '<div style="margin-bottom:1rem;"><h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#6366f1; border-bottom:2px solid #e2e8f0; padding-bottom:4px;">Idiomas</h3><p style="font-size:13px;">'+d.idiomas+'</p></div>' : ''}
+                    ${d.certificacoes ? '<div><h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#6366f1; border-bottom:2px solid #e2e8f0; padding-bottom:4px;">Certificações</h3><p style="font-size:13px;">'+d.certificacoes+'</p></div>' : ''}
+                </div>`;
+            }
+
+            function buildModernTemplate(d) {
+                // Corrigido: grid em vez de flex, nome completo sem quebra
+                return `
+                <div style="font-family: 'Inter', sans-serif; color:#1e293b; display:grid; grid-template-columns: 35% 65%; gap:0;">
+                    <div style="background:linear-gradient(180deg, #1e1b4b, #312e81); color:#fff; padding:1.5rem; border-radius:16px 0 0 16px;">
+                        <h2 style="font-size:24px; font-weight:800; margin:0 0 4px 0; line-height:1.2;">${d.nome}</h2>
+                        <p style="font-size:14px; color:#c7d2fe; margin:0 0 16px 0; font-weight:500;">${d.cargo}</p>
+                        <div style="font-size:11px; line-height:1.7; margin-bottom:1.2rem;">
+                            ${d.email ? '<div>📧 '+d.email+'</div>' : ''}
+                            ${d.telefone ? '<div>📱 '+d.telefone+'</div>' : ''}
+                            ${d.endereco ? '<div>📍 '+d.endereco+'</div>' : ''}
+                            ${d.linkedin ? '<div>🔗 '+d.linkedin+'</div>' : ''}
+                            ${d.portfolio ? '<div>🌐 '+d.portfolio+'</div>' : ''}
+                            ${d.github ? '<div>🐙 '+d.github+'</div>' : ''}
+                        </div>
+                        ${d.habilidades ? '<div style="margin-bottom:1rem;"><h4 style="font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#a5b4fc; margin-bottom:6px;">Skills</h4><p style="font-size:11px; line-height:1.5;">'+d.habilidades+'</p></div>' : ''}
+                        ${d.idiomas ? '<div style="margin-bottom:1rem;"><h4 style="font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#a5b4fc; margin-bottom:6px;">Idiomas</h4><p style="font-size:11px;">'+d.idiomas+'</p></div>' : ''}
+                        ${d.certificacoes ? '<div><h4 style="font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#a5b4fc; margin-bottom:6px;">Certificações</h4><p style="font-size:11px;">'+d.certificacoes+'</p></div>' : ''}
+                    </div>
+                    <div style="padding:1.5rem; background:#fff; border-radius:0 16px 16px 0; border:1px solid #f1f5f9;">
+                        ${d.resumo ? '<p style="font-size:13px; color:#475569; margin-bottom:1.2rem; line-height:1.6;">'+d.resumo+'</p>' : ''}
+                        ${d.experienciasHTML ? '<div style="margin-bottom:1.2rem;"><h3 style="font-size:13px; font-weight:700; color:#6366f1; margin-bottom:6px;">💼 Experiência</h3>'+d.experienciasHTML+'</div>' : ''}
+                        ${d.educacaoHTML ? '<div><h3 style="font-size:13px; font-weight:700; color:#6366f1; margin-bottom:6px;">🎓 Formação</h3>'+d.educacaoHTML+'</div>' : ''}
+                    </div>
+                </div>`;
+            }
+
+            function buildMinimalTemplate(d) {
+                return `
+                <div style="font-family: 'Inter', sans-serif; color:#1e293b; max-width:600px; margin:0 auto;">
+                    <div style="margin-bottom:1.5rem;">
+                        <h2 style="font-size:26px; font-weight:300; margin:0; letter-spacing:-0.5px;">${d.nome}</h2>
+                        <p style="font-size:14px; color:#94a3b8; margin:2px 0;">${d.cargo}</p>
+                        <p style="font-size:11px; color:#cbd5e1; display:flex; gap:10px; flex-wrap:wrap;">
+                            ${d.email ? '<span>'+d.email+'</span>' : ''}
+                            ${d.telefone ? '<span>'+d.telefone+'</span>' : ''}
+                            ${d.endereco ? '<span>'+d.endereco+'</span>' : ''}
+                            ${d.linkedin ? '<span>'+d.linkedin+'</span>' : ''}
+                            ${d.portfolio ? '<span>'+d.portfolio+'</span>' : ''}
+                            ${d.github ? '<span>'+d.github+'</span>' : ''}
+                        </p>
+                    </div>
+                    <hr style="border:0.5px solid #e2e8f0; margin-bottom:1rem;">
+                    ${d.resumo ? '<p style="font-size:12px; color:#64748b; margin-bottom:1.2rem;">'+d.resumo+'</p>' : ''}
+                    ${d.experienciasHTML ? '<div style="margin-bottom:1rem;"><h3 style="font-size:11px; font-weight:600; color:#94a3b8; letter-spacing:1px; margin-bottom:6px;">EXPERIÊNCIA</h3>'+d.experienciasHTML+'</div>' : ''}
+                    ${d.educacaoHTML ? '<div style="margin-bottom:1rem;"><h3 style="font-size:11px; font-weight:600; color:#94a3b8; letter-spacing:1px; margin-bottom:6px;">FORMAÇÃO</h3>'+d.educacaoHTML+'</div>' : ''}
+                    ${d.habilidades ? '<div style="margin-bottom:1rem;"><h3 style="font-size:11px; font-weight:600; color:#94a3b8; letter-spacing:1px; margin-bottom:6px;">HABILIDADES</h3><p style="font-size:12px;">'+d.habilidades+'</p></div>' : ''}
+                    ${d.idiomas ? '<div style="margin-bottom:1rem;"><h3 style="font-size:11px; font-weight:600; color:#94a3b8; letter-spacing:1px; margin-bottom:6px;">IDIOMAS</h3><p style="font-size:12px;">'+d.idiomas+'</p></div>' : ''}
+                    ${d.certificacoes ? '<div><h3 style="font-size:11px; font-weight:600; color:#94a3b8; letter-spacing:1px; margin-bottom:6px;">CERTIFICAÇÕES</h3><p style="font-size:12px;">'+d.certificacoes+'</p></div>' : ''}
+                </div>`;
+            }
+
+            function updatePreview() {
+                const nome = nomeInput.value.trim() || 'Seu Nome';
+                const cargo = cargoInput.value.trim() || 'Cargo Desejado';
+                const email = emailInput.value.trim();
+                const telefone = telefoneInput.value.trim();
+                const endereco = enderecoInput.value.trim();
+                const linkedin = linkedinInput.value.trim();
+                const portfolio = portfolioInput.value.trim();
+                const github = githubInput.value.trim();
+                const resumo = resumoInput.value.trim();
+                const idiomas = idiomasInput.value.trim();
+                const certificacoes = certificacoesInput.value.trim();
+                const habilidades = getSkillsArray().join(' • ');
+
+                let experienciasHTML = '';
+                experienciasContainer.querySelectorAll('.experiencia-item').forEach(item => {
+                    const c = getVal('.cargo-exp', item);
+                    const e = getVal('.empresa-exp', item);
+                    const p = getVal('.periodo-exp', item);
+                    const d = getVal('.descricao-exp', item);
+                    if (c || e || p || d) {
+                        experienciasHTML += `<div style="margin-bottom:8px;"><p style="font-weight:600; font-size:13px; margin:0;">${c||'Cargo'} ${e?'• '+e:''}</p><p style="font-size:11px; color:#94a3b8; margin:1px 0;">${p||''}</p><p style="font-size:12px; color:#475569; margin:2px 0;">${d||''}</p></div>`;
+                    }
+                });
+
+                let educacaoHTML = '';
+                educacaoContainer.querySelectorAll('.educacao-item').forEach(item => {
+                    const c = getVal('.curso-edu', item);
+                    const i = getVal('.instituicao-edu', item);
+                    const a = getVal('.ano-edu', item);
+                    if (c || i || a) {
+                        educacaoHTML += `<div style="margin-bottom:8px;"><p style="font-weight:600; font-size:13px; margin:0;">${c||'Curso'} ${i?'• '+i:''}</p><p style="font-size:11px; color:#94a3b8; margin:1px 0;">${a||''}</p></div>`;
+                    }
+                });
+
+                const data = { nome, cargo, email, telefone, endereco, linkedin, portfolio, github, resumo, experienciasHTML, educacaoHTML, habilidades, idiomas, certificacoes };
+
+                let html = '';
+                if (currentTemplate === 'classic') html = buildClassicTemplate(data);
+                else if (currentTemplate === 'modern') html = buildModernTemplate(data);
+                else html = buildMinimalTemplate(data);
+
+                preview.innerHTML = html;
+            }
+
+            function addItem(templateId, container) {
+                const tmpl = document.getElementById(templateId);
+                const clone = tmpl.content.cloneNode(true);
+                container.appendChild(clone);
+                const newItem = container.lastElementChild;
+                newItem.querySelector('.remove-item').addEventListener('click', () => { newItem.remove(); updatePreview(); });
+                newItem.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', updatePreview));
+                updatePreview();
+            }
+
+            document.getElementById('add-experiencia').addEventListener('click', () => addItem('experiencia-template', experienciasContainer));
+            document.getElementById('add-educacao').addEventListener('click', () => addItem('educacao-template', educacaoContainer));
+
+            // Atualizar preview nos inputs
+            [nomeInput, cargoInput, emailInput, telefoneInput, enderecoInput, linkedinInput, portfolioInput, githubInput, resumoInput, idiomasInput, certificacoesInput]
+                .forEach(el => el.addEventListener('input', updatePreview));
+
+            // Inicializar
+            window.addEventListener('DOMContentLoaded', () => {
+                if (experienciasContainer.children.length === 0) addItem('experiencia-template', experienciasContainer);
+                if (educacaoContainer.children.length === 0) addItem('educacao-template', educacaoContainer);
+                updateSkillsFromInput();
+                updatePreview();
+            });
+
+            // Download PDF
+            document.getElementById('download-btn').addEventListener('click', () => {
+                banner.classList.add('hidden-banner');
+                html2pdf().set({
+                    margin: [0.4, 0.4, 0.4, 0.4],
+                    filename: 'curriculo.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, letterRendering: true, useCORS: true },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                }).from(preview).save().then(() => {
+                    if (localStorage.getItem('bannerClosed') !== 'true') banner.classList.remove('hidden-banner');
+                });
+            });
+
+            // Imprimir
+            document.getElementById('print-btn').addEventListener('click', () => {
+                banner.classList.add('hidden-banner');
+                window.print();
+                setTimeout(() => {
+                    if (localStorage.getItem('bannerClosed') !== 'true') banner.classList.remove('hidden-banner');
+                }, 600);
+            });
+
+        })();
+    </script>
+</body>
+</html>
